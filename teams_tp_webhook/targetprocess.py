@@ -2,9 +2,10 @@ import ssl
 import asyncio
 import logging
 from aiohttp_negotiate import NegotiateClientSession
+from . import config
 
 class TargetProcessClient(object):
-    def __init__(self, url, cafile="/usr/local/etc/local-ca-certificates/all.crt"):
+    def __init__(self, url, cafile=config.cafile):
         self._url = url
         self._session = None
         self._cafile = cafile
@@ -24,20 +25,34 @@ class TargetProcessClient(object):
 
     async def get_assignable_by_id(self, tp_id: str):
         async with self.session.get(f"{self._url}/api/v1/Assignables/",
-                                      params={'where':f"Id eq {tp_id}"},
+                                      params={'where':f"Id eq {tp_id}",
+                                              'include':'[Name]',
+                                              'format':'json'},
                                       ssl_context=self.ssl_context) as response:
-            return await response.text()
+            return await response.json()
 
 
-async def main():
-    tp = TargetProcessClient("https://tp.niradynamics.local")
-    xml = await tp.get_assignable_by_id("38903")
-    print(xml)
+async def main(tp_id):
+    tp = TargetProcessClient(config.tp_url)
+    data = await tp.get_assignable_by_id(tp_id)
+    print(data)
+    if data:
+        print (data['Items'][0]['Name'])
     await tp.session.close()
 
-if __name__ == "__main__":
-    logging.basicConfig(level=logging.DEBUG)
+def cmdline():
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--config-file", "-c")
+    parser.add_argument("--verbose", "-v", action='store_true', default=False)
+    parser.add_argument("tp_id")
+
+    args = parser.parse_args()
+    logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO)
+
+    config.add_override(args.config_file)
+
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(main())
+    loop.run_until_complete(main(args.tp_id))
 
 
