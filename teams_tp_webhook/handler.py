@@ -27,19 +27,19 @@ async def handle_mention(request: aiohttp.web.Request):
     activity = Activity.deserialize(data)
 
     response_activity = Activity()
-    response_activity.text = ""
-    mo = re.findall("#(?P<id>[0-9]+)", activity.text)
+    mo = re.search("#(?P<id>[0-9]+)", activity.text)
 
     if mo:
-        for tp_id in mo
-            resp = await tp.get_assignable_by_id(tp_id)
-            items = resp['Items']
-            if items:
-                response_activity.text += f"""{response_activity.text}<h1>{tp_id} - {items[0]['Name']}</h1><br/>
-                <a href="https://tp.niradynamics.local/entity/{tp_id}">view in TP</a><br/>
-                """
-            else:
-                response_activity.text += f"{response_activity.text}No such TP item #<b>{tp_id}</b><br/>"
+        tp_id = mo.group("id")
+
+        resp = await tp.get_assignable_by_id(tp_id)
+        items = resp['Items']
+        if items:
+            response_activity.text = f"""<h1>{tp_id} - {items[0]['Name']}</h1><br/>
+            <a href="https://tp.niradynamics.local/entity/{tp_id}">view in TP</a>
+            """
+        else:
+            response_activity.text = f"No such TP item #<b>{tp_id}</b>"
     else:
         response_activity.text = "Sorry, I don't understand. Please include a TP issue formatted as <b>#99999</b>"
 
