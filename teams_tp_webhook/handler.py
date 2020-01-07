@@ -14,7 +14,7 @@ from . import config
 from .auth import authenticate_request
 from .targetprocess import TargetProcessClient
 
-tp = TargetProcessClient(config.tp_url)
+tp = TargetProcessClient(config.tp_url, access_token=config.tp_access_token)
 
 async def handle_mention(request: aiohttp.web.Request):
     body = await request.read()

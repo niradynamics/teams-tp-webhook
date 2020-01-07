@@ -1,9 +1,12 @@
 import argparse
 from aiohttp import web
 from . import config
-from .handler import handle_mention
+
 
 def configure_app():
+    # Import here so any configuration override has been added.
+    from .handler import handle_mention
+
     app = web.Application()
     app.add_routes([web.post("/{client_name}", handle_mention)])
     return app
