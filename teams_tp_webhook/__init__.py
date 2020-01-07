@@ -10,9 +10,8 @@ class Config(object):
 
     def add_override(self, extra_config_file: str):
 
-        logger.debug(f"Considering extra_config_file {extra_config_file}")
         if extra_config_file is not None:
-            logger.debug(f"Adding configuration from {extra_config_file}")
+            logger.debug(f"Considering extra_config_file {extra_config_file}")
             extra = ConfigFactory.parse_file(extra_config_file)
             self._config = extra.with_fallback(self._config)
         return self._config

@@ -2,12 +2,11 @@ from setuptools import setup, find_packages
 
 setup(
     name='TeamsTPWebhook',
-    version='0.1dev',
+    version='0.4',
     packages=find_packages(exclude=['tests']),
     license='MIT',
     install_requires=[
         'aiohttp==3.4.4',
-        'aiohttp-negotiate',
         'botbuilder-core>=4.0.0.a6',
         'pyhocon==0.3.47'
         ],

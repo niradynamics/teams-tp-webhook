@@ -31,7 +31,7 @@ async def handle_mention(request: aiohttp.web.Request):
     mo = re.findall("#(?P<id>[0-9]+)", activity.text)
 
     if mo:
-        for tp_id in mo
+        for tp_id in mo:
             resp = await tp.get_assignable_by_id(tp_id)
             items = resp['Items']
             if items:
