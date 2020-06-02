@@ -28,7 +28,7 @@ async def handle_mention(request: aiohttp.web.Request):
 
     response_activity = Activity()
     response_activity.text = ""
-    mo = re.findall("#(?P<id>[0-9]+)", activity.text)
+    mo = re.findall("(#|TP)(?P<id>[0-9]+))", activity.text)
 
     if mo:
         for tp_id in mo:
