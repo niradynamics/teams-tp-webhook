@@ -36,10 +36,10 @@ async def handle_mention(request: aiohttp.web.Request):
             items = resp['Items']
             if items:
                 response_activity.text = f"""{response_activity.text}<h1>{tp_id[1]} - {items[0]['Name']}</h1><br/>
-                <a href="https://tp.niradynamics.local/entity/{tp_id}">view in TP</a><br/>
+                <a href="https://tp.niradynamics.local/entity/{tp_id[1]}">view in TP</a><br/>
                 """
             else:
-                response_activity.text = f"{response_activity.text}No such TP item #<b>{tp_id}</b><br/>"
+                response_activity.text = f"{response_activity.text}No such TP item #<b>{tp_id[1]}</b><br/>"
     else:
         response_activity.text = "Sorry, I don't understand. Please include a TP issue formatted as <b>#99999</b>"
 
