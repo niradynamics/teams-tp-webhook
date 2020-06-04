@@ -3,6 +3,7 @@ import asyncio
 import logging
 #from aiohttp_negotiate import NegotiateClientSession
 from aiohttp import ClientSession
+from aiohttp.client_exceptions import ContentTypeError
 from . import config
 
 class TargetProcessClient(object):
@@ -28,13 +29,23 @@ class TargetProcessClient(object):
 
     async def get_assignable_by_id(self, tp_id: str):
         async with self.session.get(f"{self._url}/api/v1/Assignables/",
-                                      params={'where':f"Id eq {tp_id}",
-                                              'include':'[Name]',
-                                              'format':'json',
-                                              'access_token': self._access_token},
-                                      ssl_context=self.ssl_context) as response:
-            return await response.json()
-
+                                    params={'where':f"Id eq {tp_id}",
+                                            'include':'[Name]',
+                                            'format':'json',
+                                            'access_token': self._access_token},
+                                    ssl_context=self.ssl_context) as response:
+            try:
+                data = await response.json()
+            except ContentTypeError as exc:
+                logging.error(
+                    'failed to decode response code:%s url:%s '
+                    'tpid: %s '
+                    'error:%s response:%s', response.status, self._url,
+                    tp_id, exc, response.reason
+                )
+                raise exc
+            else:
+                return data
 
 async def main(tp_id):
     tp = TargetProcessClient(config.tp_url, cafile=config.cafile, access_token=config.tp_access_token)
