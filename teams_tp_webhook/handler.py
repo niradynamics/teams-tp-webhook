@@ -36,7 +36,7 @@ async def handle_mention(request: aiohttp.web.Request):
             items = resp['Items']
             if items:
                 response_activity.text = f"""{response_activity.text}<h1>{tp_id[1]} - {items[0]['Name']}</h1><br/>
-                <a href="https://${config.tp_url}/entity/{tp_id[1]}">view in TP</a><br/>
+                <a href="{config.tp_url}/entity/{tp_id[1]}">view in TP</a><br/>
                 """
             else:
                 response_activity.text = f"{response_activity.text}No such TP item #<b>{tp_id[1]}</b><br/>"
