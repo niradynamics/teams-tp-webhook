@@ -22,3 +22,6 @@ def main():
     app = configure_app()
 
     web.run_app(app, reuse_port=True, reuse_address=True, port=args.port)
+
+if __name__ == "__main__":
+    main()

@@ -8,7 +8,7 @@ import base64
 
 from botbuilder.core import CardFactory
 from botbuilder.schema import Activity, HeroCard
-from botbuilder.schema.connector_client_enums import AttachmentLayoutTypes
+from botbuilder.schema import AttachmentLayoutTypes
 
 from . import config
 from .auth import authenticate_request
@@ -36,7 +36,7 @@ async def handle_mention(request: aiohttp.web.Request):
             items = resp['Items']
             if items:
                 response_activity.text = f"""{response_activity.text}<h1>{tp_id[1]} - {items[0]['Name']}</h1><br/>
-                <a href="https://tp.niradynamics.local/entity/{tp_id[1]}">view in TP</a><br/>
+                <a href="https://${config.tp_url}/entity/{tp_id[1]}">view in TP</a><br/>
                 """
             else:
                 response_activity.text = f"{response_activity.text}No such TP item #<b>{tp_id[1]}</b><br/>"
@@ -44,7 +44,6 @@ async def handle_mention(request: aiohttp.web.Request):
         response_activity.text = "Sorry, I don't understand. Please include a TP issue formatted as <b>#99999</b>"
 
     print (response_activity.as_dict())
-
 
     return aiohttp.web.json_response(
         response_activity.as_dict()
