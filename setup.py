@@ -6,7 +6,7 @@ setup(
     packages=find_packages(exclude=['tests']),
     license='MIT',
     install_requires=[
-        'aiohttp==3.8.4',
+        'aiohttp==3.8.5',
         'botbuilder-core==4.14.3',
         'pyhocon==0.3.60'
         ],
